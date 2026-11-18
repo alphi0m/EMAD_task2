@@ -15,20 +15,34 @@ class TaskTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-      elevation: task.isImportant ? 2 : 1,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+        side: BorderSide(
+          color: task.isImportant
+              ? Colors.amber.shade600
+              : Colors.transparent,
+          width: task.isImportant ? 1.5 : 0,
+        ),
+      ),
       child: ListTile(
+        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
         leading: Checkbox(
           value: task.isCompleted,
+          activeColor: Colors.green.shade600,
           onChanged: onStatusChanged,
         ),
         title: Text(
           task.title,
           style: TextStyle(
             decoration: task.isCompleted ? TextDecoration.lineThrough : null,
-            color: task.isCompleted ? Colors.grey : Colors.black87,
-            fontWeight: task.isImportant ? FontWeight.w600 : FontWeight.normal,
+            color: task.isCompleted
+                ? theme.colorScheme.onSurface.withValues(alpha: 0.4)
+                : theme.colorScheme.onSurface,
+            fontWeight: task.isImportant ? FontWeight.bold : FontWeight.w500,
           ),
         ),
         subtitle: Row(
@@ -36,19 +50,21 @@ class TaskTile extends StatelessWidget {
             Text(
               task.isCompleted ? 'Completata' : 'Da fare',
               style: TextStyle(
-                color: task.isCompleted ? Colors.green.shade700 : Colors.blueGrey,
+                color: task.isCompleted
+                    ? Colors.green.shade400
+                    : theme.colorScheme.onSurfaceVariant,
                 fontSize: 13,
                 fontWeight: FontWeight.w500,
               ),
             ),
             if (task.isImportant) ...[
               const SizedBox(width: 10),
-              Icon(Icons.star, color: Colors.amber.shade700, size: 16),
+              Icon(Icons.star, color: Colors.amber.shade500, size: 16),
               const SizedBox(width: 2),
               Text(
                 'Importante',
                 style: TextStyle(
-                  color: Colors.amber.shade800,
+                  color: Colors.amber.shade500,
                   fontWeight: FontWeight.bold,
                   fontSize: 13,
                 ),
@@ -57,7 +73,8 @@ class TaskTile extends StatelessWidget {
           ],
         ),
         trailing: IconButton(
-          icon: const Icon(Icons.delete_outline, color: Colors.red),
+          icon: Icon(Icons.delete_outline, color: Colors.red.shade400),
+          tooltip: 'Elimina',
           onPressed: onDelete,
         ),
       ),

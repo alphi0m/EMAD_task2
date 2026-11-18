@@ -4,7 +4,14 @@ import '../widgets/task_tile.dart';
 import 'add_task_screen.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  final bool isDarkMode;
+  final VoidCallback onToggleTheme;
+
+  const HomeScreen({
+    super.key,
+    required this.isDarkMode,
+    required this.onToggleTheme,
+  });
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -70,55 +77,88 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final allCompleted = _totalCount > 0 && _completedCount == _totalCount;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('To-Do List'),
         centerTitle: true,
+        actions: [
+          IconButton(
+            icon: Icon(
+              widget.isDarkMode ? Icons.light_mode_outlined : Icons.dark_mode_outlined,
+            ),
+            tooltip: widget.isDarkMode ? 'Passa al tema chiaro' : 'Passa al tema scuro',
+            onPressed: widget.onToggleTheme,
+          ),
+        ],
       ),
       body: Column(
         children: [
-          // Barra riassuntiva con conteggio delle completate
+          // Scheda contatore attività completate
           Container(
             width: double.infinity,
-            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+            padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
             decoration: BoxDecoration(
-              color: Colors.blue.shade50,
-              borderRadius: BorderRadius.circular(10),
+              color: theme.colorScheme.primaryContainer,
+              borderRadius: BorderRadius.circular(12),
             ),
-            child: Text(
-              'Attività completate: $_completedCount su $_totalCount',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: Colors.blue.shade900,
-              ),
-              textAlign: TextAlign.center,
+            child: Column(
+              children: [
+                Text(
+                  'Attività completate: $_completedCount su $_totalCount',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: theme.colorScheme.onPrimaryContainer,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                if (allCompleted) ...[
+                  const SizedBox(height: 4),
+                  Text(
+                    'Tutto completato! Ottimo lavoro 🎉',
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                      color: theme.colorScheme.onPrimaryContainer.withValues(alpha: 0.8),
+                    ),
+                  ),
+                ],
+              ],
             ),
           ),
 
           // Lista delle attività o messaggio per lista vuota
           Expanded(
             child: _tasks.isEmpty
-                ? const Center(
+                ? Center(
                     child: Padding(
-                      padding: EdgeInsets.all(24.0),
+                      padding: const EdgeInsets.all(24.0),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.checklist, size: 64, color: Colors.grey),
-                          SizedBox(height: 12),
-                          Text(
+                          Icon(
+                            Icons.checklist,
+                            size: 64,
+                            color: theme.colorScheme.outline,
+                          ),
+                          const SizedBox(height: 12),
+                          const Text(
                             'Nessuna attività presente',
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
-                          SizedBox(height: 6),
+                          const SizedBox(height: 6),
                           Text(
                             'Premi il pulsante in basso per aggiungerne una.',
-                            style: TextStyle(color: Colors.grey),
+                            style: TextStyle(
+                              color: theme.colorScheme.onSurfaceVariant,
+                            ),
                             textAlign: TextAlign.center,
                           ),
                         ],
