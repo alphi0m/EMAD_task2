@@ -7,6 +7,7 @@ Applicazione To-Do list realizzata in Flutter per il corso di Enterprise Mobile 
 - **Consultazione**: elenco di tutte le attività con indicazione chiara di stato (da fare / completata) e importanza. Contatore in evidenza con il numero di attività completate sul totale.
 - **Aggiornamento stato**: tap sulla checkbox per alternare tra completata e da fare con aggiornamento immediato del contatore.
 - **Eliminazione**: richiesta di conferma prima di cancellare un'attività (con possibilità di annullare senza modifiche).
+- **Tema dinamico**: supporto al tema scuro (di default) e tema chiaro, alternabili tramite il toggle nell'AppBar.
 
 ## Esecuzione
 Per avviare l'applicazione:
